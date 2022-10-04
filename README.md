@@ -1,2 +1,2 @@
 # mercado-livro-documentation
-## A UI documentatio of mercado-livro API.
+## A UI documentation of mercado-livro API.
