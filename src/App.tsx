@@ -6,14 +6,20 @@ import { Button, Tooltip, Tab, Box, Grid, TextField, Modal, Typography, Circular
 import { TabPanel, TabList, TabContext } from '@mui/lab'
 import { apiMercadoLivroDocs, IParam, IMercadoLivroDocs, IRequest, ITextFields } from './utils/options'
 import { submitRequest } from './api'
+import { incrementCount } from './store/reducers';
+
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from './store'
 
 function App() {
   const emptyTextFieldValues: ITextFields = { fullName: '', email: '', id: '' }
 
+  const dispatch = useDispatch();
+  const state = useSelector((state: RootState) => state);
+  
   const [isLoadindRequest, setIsLoadingRequest] = useState(false)
   const [openModalToShowResponse, setOpenModalToShowResponse] = useState(false)
   const [textFieldValues, setTextFieldValue] = useState(emptyTextFieldValues)
-  const [count, setCount] = useState(0)
   const [apiMercadoLivroDocsToShow, setApiMercadoLivroDocsToShow] = useState(apiMercadoLivroDocs[0])
 
   const handleChangeTab = (event: SyntheticEvent, title: string) => {
@@ -177,9 +183,9 @@ function App() {
               outline: 'none'
             }}
             variant='contained' 
-            onClick={() => setCount((count: number) => count + 1)}
+            onClick={() => dispatch(incrementCount())}
           >
-            count is {count}
+            count is {state.count.value}
           </Button>
         </Tooltip>
         <p>
