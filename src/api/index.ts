@@ -16,23 +16,16 @@ export const submitRequest = async ({ method, params, path  }: IRequest, textFie
       if(!textFieldValues[param.name]) {
         query += `${param.name}=&`
         countQuery++
-
       } else {
         // @ts-ignore: Unreachable code error
         query += `${param.name}=${textFieldValues[param.name]}&`
         countQuery++
       }
     }
-
-    if (param.type === 'Body') {
-      // @ts-ignore: Unreachable code error
-      data[param.name] = textFieldValues[param.name]
-    }
-
-    if(param.type === 'Path') {
-      // @ts-ignore: Unreachable code error
-      path = path.replace(param.name, textFieldValues[param.name])
-    }
+    // @ts-ignore: Unreachable code error
+    if (param.type === 'Body') data[param.name] = textFieldValues[param.name]
+    // @ts-ignore: Unreachable code error
+    if(param.type === 'Path') path = path.replace(param.name, textFieldValues[param.name])
 
   })
 
@@ -47,7 +40,8 @@ export const submitRequest = async ({ method, params, path  }: IRequest, textFie
     return {
       response: {
         status: 400
-      }
+      },
+      isCompleteRequest: false
     }
   }
   return {

@@ -1,40 +1,52 @@
 import React, { SyntheticEvent } from 'react'
-import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import './App.css'
-import { Button, Tooltip, Tab, Box, Grid, TextField, Modal, Typography, CircularProgress } from '@mui/material'
+import { 
+  Button, 
+  Tooltip, 
+  Tab, 
+  Box, 
+  Grid, 
+  TextField, 
+  Modal, 
+  Typography, 
+  CircularProgress 
+} from '@mui/material'
 import { TabPanel, TabList, TabContext } from '@mui/lab'
-import { apiMercadoLivroDocs, IParam, IMercadoLivroDocs, IRequest, ITextFields } from './utils/options'
+import { apiMercadoLivroDocs, IParam, IMercadoLivroDocs } from './utils/options'
 import { submitRequest } from './api'
-import { incrementCount } from './store/reducers';
+import { 
+  incrementCount, 
+  setIsLoadingRequest, 
+  setOpenModalToShowResponse, 
+  setTextFieldValue, 
+  clearTextFieldValues,
+  setApiMercadoLivroDocsToShow,
+  setResult
+} from './store/reducers/app';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from './store'
 
 function App() {
-  const emptyTextFieldValues: ITextFields = { fullName: '', email: '', id: '' }
-
   const dispatch = useDispatch();
   const state = useSelector((state: RootState) => state);
   
-  const [isLoadindRequest, setIsLoadingRequest] = useState(false)
-  const [openModalToShowResponse, setOpenModalToShowResponse] = useState(false)
-  const [textFieldValues, setTextFieldValue] = useState(emptyTextFieldValues)
-  const [apiMercadoLivroDocsToShow, setApiMercadoLivroDocsToShow] = useState(apiMercadoLivroDocs[0])
-
   const handleChangeTab = (event: SyntheticEvent, title: string) => {
-    setTextFieldValue(emptyTextFieldValues)
-    setApiMercadoLivroDocsToShow(apiMercadoLivroDocs.filter(element => element.title === title)[0])
+    dispatch(clearTextFieldValues())
+    dispatch(setApiMercadoLivroDocsToShow(apiMercadoLivroDocs.filter(element => 
+      element.title === title)[0])
+    )
   }
 
   const handleToShowModal = () => {
-    setOpenModalToShowResponse(!openModalToShowResponse)
+    dispatch(setOpenModalToShowResponse(!state.app.openModalToShowResponse))
   }
 
   return (
     <div className='App'>
       <Box>
-      <TabContext value={apiMercadoLivroDocsToShow.title}>
+      <TabContext value={state.app.apiMercadoLivroDocsToShow.title}>
         <TabList
           onChange={handleChangeTab}
         >
@@ -43,23 +55,23 @@ function App() {
           )}
         </TabList>
         <TabPanel
-          value={apiMercadoLivroDocsToShow.title}
+          value={state.app.apiMercadoLivroDocsToShow.title}
         >
           <Grid style={{
             textAlign: 'left',
-            color: apiMercadoLivroDocsToShow.color,
+            color: state.app.apiMercadoLivroDocsToShow.color,
           }}>
-            <h3>Endpoint: {apiMercadoLivroDocsToShow.title}</h3>
-            <h3>Path: {apiMercadoLivroDocsToShow.path}</h3>
-            <h3>Method: {apiMercadoLivroDocsToShow.method}</h3>
-            <h3>Status: {apiMercadoLivroDocsToShow.status}</h3>
-            <h3>Return type: {apiMercadoLivroDocsToShow.returnType}</h3>
+            <h3>Endpoint: {state.app.apiMercadoLivroDocsToShow.title}</h3>
+            <h3>Path: {state.app.apiMercadoLivroDocsToShow.path}</h3>
+            <h3>Method: {state.app.apiMercadoLivroDocsToShow.method}</h3>
+            <h3>Status: {state.app.apiMercadoLivroDocsToShow.status}</h3>
+            <h3>Return type: {state.app.apiMercadoLivroDocsToShow.returnType}</h3>
           </Grid>
           <Grid>
           <hr/>
           <h3>Parameters:</h3>
             <ul style={{ textAlign: 'left', display: 'flex', justifyContent: 'flex-start' }}>
-              {apiMercadoLivroDocsToShow.params.map((param: IParam, index: number) =>
+              {state.app.apiMercadoLivroDocsToShow.params.map((param: IParam, index: number) =>
                 <Grid key={index}>
                   <div style={{ marginLeft: '2rem' }}>
                     <h4>{index+1}. Name: {param.name}</h4>
@@ -77,7 +89,7 @@ function App() {
             <h3>Use Endpoint</h3>
             <div style={{ textAlign: 'left' }}>
             <h4>Parameters</h4>
-              {apiMercadoLivroDocsToShow.params.map((param: IParam, index: number) => 
+              {state.app.apiMercadoLivroDocsToShow.params.map((param: IParam, index: number) => 
                 <Grid key={index}>
                   <TextField
                     style={{
@@ -87,14 +99,14 @@ function App() {
                     label={param.name}
                     variant="standard"
                     // @ts-ignore: Unreachable code error
-                    value={textFieldValues[param.name]}
+                    value={state.app.textFieldValues[param.name]}
                     onChange={(event) => { 
-                      setTextFieldValue({...textFieldValues, [param.name]: event.target.value})
+                      dispatch(setTextFieldValue({ value: event.target.value, field: param.name }))
                     }}
                   />
                 </Grid>
               )}
-              <Tooltip arrow={true} title={'Click for ' + apiMercadoLivroDocsToShow.title}>
+              <Tooltip arrow={true} title={'Click for ' + state.app.apiMercadoLivroDocsToShow.title}>
                 <Button
                   style={{
                     outline: 'none',
@@ -103,20 +115,21 @@ function App() {
                   }}
                   variant='contained' 
                   onClick={async () => {
-                    setIsLoadingRequest(true)
+                    dispatch(setIsLoadingRequest(true))
                     handleToShowModal()
-                    const { method, params, path  } =  apiMercadoLivroDocsToShow;
-                    const { response, isCompleteRequest } = await submitRequest({ method, params, path }, textFieldValues)
-                    setTextFieldValue(emptyTextFieldValues)
-                    setInterval(() => setIsLoadingRequest(isCompleteRequest), 2200)
-                    console.log('Result of request for ' + apiMercadoLivroDocsToShow.title, response)
+                    const { method, params, path  } =  state.app.apiMercadoLivroDocsToShow;
+                    const { response, isCompleteRequest } = await submitRequest({ method, params, path }, state.app.textFieldValues)
+                    
+                    dispatch(clearTextFieldValues())
+                    setTimeout(() => dispatch(setIsLoadingRequest(isCompleteRequest)), 2000) 
+                    dispatch(setResult(response.data))
                   }}
                 >
                   Submit
                 </Button>
               </Tooltip>
               <Modal
-                open={openModalToShowResponse}
+                open={state.app.openModalToShowResponse}
                 onClose={handleToShowModal}
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
@@ -135,7 +148,7 @@ function App() {
                     borderRadius: '8px'
                   }}
                 >
-                  {isLoadindRequest ? 
+                  {state.app.isLoadindRequest ? 
                     <Grid style={{
                       display: 'flex',
                       justifyContent: 'center',
@@ -153,10 +166,14 @@ function App() {
                       }}
                     >
                       <Typography id="modal-modal-title" variant="h5" component="h1">
-                        Request send.
+                        Result:
                       </Typography>
                       <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                         Open the console for see response.
+                        <Grid>
+                          <pre>
+                            { JSON.stringify(state.app.result, null, 2) }
+                          </pre>
+                        </Grid>
                       </Typography>                  
                     </Grid>
                   }
@@ -177,7 +194,7 @@ function App() {
       </div>
       <h1>Vite + React</h1>
       <div className='card'>
-        <Tooltip arrow={true} title='Button for increment count'>
+        <Tooltip arrow={true} title='Button for increment app'>
           <Button 
             style={{
               outline: 'none'
@@ -185,7 +202,7 @@ function App() {
             variant='contained' 
             onClick={() => dispatch(incrementCount())}
           >
-            count is {state.count.value}
+            count is {state.app.count}
           </Button>
         </Tooltip>
         <p>
