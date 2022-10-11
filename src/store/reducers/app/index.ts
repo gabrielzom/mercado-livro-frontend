@@ -24,11 +24,6 @@ const app = createSlice({
     result: resultStorage || null
   },
   reducers: {
-    incrementCount: (state) => {
-      state.count += 1;
-      window.localStorage.setItem('count', JSON.stringify(state.count))
-    },
-
     setIsLoadingRequest: (state, { payload: isLoading }) => {
       state.isLoadindRequest = isLoading;
     },
@@ -37,28 +32,48 @@ const app = createSlice({
       state.openModalToShowResponse = showModal;
     },
 
+    incrementCount: (state) => {
+      state.count += 1;
+      localStorage.setItem(
+        'count', 
+        JSON.stringify(state.count)
+      )
+    },
+
     setTextFieldValue: (state, { payload: textFieldValue }) => {
       const { value, field } = textFieldValue;
       // @ts-ignore: Unreachable code error
       state.textFieldValues[field] = value
-      window.localStorage.setItem('textFieldValues', JSON.stringify(state.textFieldValues))
+      localStorage.setItem(
+        'textFieldValues', 
+        JSON.stringify(state.textFieldValues)
+      )
     },
 
     clearTextFieldValues: (state) => {
       state.textFieldValues = emptyTextFieldValues;
-      window.localStorage.setItem('textFieldValues', JSON.stringify(state.textFieldValues))
+      localStorage.setItem(
+        'textFieldValues', 
+        JSON.stringify(state.textFieldValues)
+      )
     },
 
     setApiMercadoLivroDocsToShow: (state, { payload: apiMercadoLivroDocsToShow }) => {
       state.apiMercadoLivroDocsToShow = apiMercadoLivroDocs.filter(
         element => element.title === apiMercadoLivroDocsToShow.title
       )[0]
-      window.localStorage.setItem('apiMercadoLivroDocsToShow', JSON.stringify(state.apiMercadoLivroDocsToShow))
+      localStorage.setItem(
+        'apiMercadoLivroDocsToShow', 
+        JSON.stringify(state.apiMercadoLivroDocsToShow)
+      )
     },
 
     setResult: (state, { payload: result }) => {
       state.result = result;
-      window.localStorage.setItem('result', JSON.stringify(state.result))
+      localStorage.setItem(
+        'result', 
+        JSON.stringify(state.result)
+      )
     }
   }
 })
@@ -72,4 +87,5 @@ export const {
   setApiMercadoLivroDocsToShow,
   setResult
 } = app.actions;
+
 export default app.reducer;
