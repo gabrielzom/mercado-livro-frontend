@@ -30,8 +30,9 @@ import { RootState } from './store'
 
 function App() {
   const dispatch = useDispatch();
+
   const state = useSelector((state: RootState) => state);
-  
+
   const handleChangeTab = (event: SyntheticEvent, title: string) => {
     dispatch(clearTextFieldValues())
     dispatch(setApiMercadoLivroDocsToShow(apiMercadoLivroDocs.filter(element => 
@@ -87,8 +88,8 @@ function App() {
             </ul>
             <hr/>
             <h3>Use Endpoint</h3>
-            <div style={{ textAlign: 'left' }}>
-            <h4>Parameters</h4>
+            <Grid style={{ textAlign: 'left' }}>
+              <h4>Parameters</h4>
               {state.app.apiMercadoLivroDocsToShow.params.map((param: IParam, index: number) => 
                 <Grid key={index}>
                   <TextField
@@ -179,7 +180,7 @@ function App() {
                   }
                 </Grid>
               </Modal>
-            </div>
+            </Grid>
           </Grid>
         </TabPanel>
       </TabContext>
