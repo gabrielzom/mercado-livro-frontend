@@ -35,8 +35,7 @@ function App() {
 
   const handleChangeTab = (event: SyntheticEvent, title: string) => {
     dispatch(clearTextFieldValues())
-    dispatch(setApiMercadoLivroDocsToShow(apiMercadoLivroDocs.filter(element => 
-      element.title === title)[0])
+    dispatch(setApiMercadoLivroDocsToShow(title)
     )
   }
 

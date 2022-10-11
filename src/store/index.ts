@@ -4,7 +4,7 @@ import appReducers from "./reducers/app";
 export const store = configureStore({
   reducer: {
     app: appReducers,
-
+    
   }
 })
 

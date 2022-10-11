@@ -58,9 +58,9 @@ const app = createSlice({
       )
     },
 
-    setApiMercadoLivroDocsToShow: (state, { payload: apiMercadoLivroDocsToShow }) => {
+    setApiMercadoLivroDocsToShow: (state, { payload: title }) => {
       state.apiMercadoLivroDocsToShow = apiMercadoLivroDocs.filter(
-        element => element.title === apiMercadoLivroDocsToShow.title
+        element => element.title === title
       )[0]
       localStorage.setItem(
         'apiMercadoLivroDocsToShow', 
