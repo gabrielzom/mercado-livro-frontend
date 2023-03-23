@@ -5,7 +5,10 @@ const mercadoLivro = axios.create({
   baseURL: 'http://localhost:8080',
 })
 
-export const submitRequest = async ({ method, params, path  }: IRequest, textFieldValues: ITextFields): Promise<any> => {
+export const submitRequest = async (
+  { method, params, path  }: IRequest, 
+  textFieldValues: ITextFields
+): Promise<any> => {
   let response: any
   let data: any = {}
   let query = '?'
@@ -22,20 +25,19 @@ export const submitRequest = async ({ method, params, path  }: IRequest, textFie
         countQuery++
       }
     }
-    // @ts-ignore: Unreachable code error
-    if (param.type === 'Body') data[param.name] = textFieldValues[param.name]
-    // @ts-ignore: Unreachable code error
-    if(param.type === 'Path') path = path.replace(param.name, textFieldValues[param.name])
-
+    if (param.type === 'Body') {
+       // @ts-ignore: Unreachable code error
+      data[param.name] = textFieldValues[param.name]
+    }
+    if(param.type === 'Path') {
+      // @ts-ignore: Unreachable code error
+      path = path.replace(param.name, textFieldValues[param.name])
+    }
   })
-
   if (!!countQuery) {
-    query = query.substring(0, query.length-1)
-    response = await mercadoLivro({ method, url: path + query, data })
-  } else {
-    response = await mercadoLivro({ method, url: path, data })
+    path += query.substring(0, query.length-1)
   }
-
+  response = await mercadoLivro({ method, url: path, data })
   if (response.status > 290) {
     return {
       response: {

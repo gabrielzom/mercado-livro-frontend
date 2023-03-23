@@ -35,8 +35,7 @@ function App() {
 
   const handleChangeTab = (event: SyntheticEvent, title: string) => {
     dispatch(clearTextFieldValues())
-    dispatch(setApiMercadoLivroDocsToShow(title)
-    )
+    dispatch(setApiMercadoLivroDocsToShow(title))
   }
 
   const handleToShowModal = () => {
@@ -44,7 +43,7 @@ function App() {
   }
 
   return (
-    <div className='App'>
+    <Grid className='App'>
       <Box>
       <TabContext value={state.app.apiMercadoLivroDocsToShow.title}>
         <TabList
@@ -73,15 +72,15 @@ function App() {
             <ul style={{ textAlign: 'left', display: 'flex', justifyContent: 'flex-start' }}>
               {state.app.apiMercadoLivroDocsToShow.params.map((param: IParam, index: number) =>
                 <Grid key={index}>
-                  <div style={{ marginLeft: '2rem' }}>
+                  <Grid style={{ marginLeft: '2rem' }}>
                     <h4>{index+1}. Name: {param.name}</h4>
-                    <div style={{ marginLeft: '2rem' }}>
+                    <Grid style={{ marginLeft: '2rem' }}>
                       <li>Type: {param.type}</li>
                       <li>Value type: {param.valueType}</li>
                       <li>Is Required ? {param.required ? 'Yes.' : 'No.'}</li>
                       <li>Observation: {!!param.obs ? param.obs : '-'}</li>
-                    </div>
-                  </div>
+                    </Grid>
+                  </Grid>
                 </Grid>
               )}
             </ul>
@@ -100,7 +99,7 @@ function App() {
                     variant="standard"
                     // @ts-ignore: Unreachable code error
                     value={state.app.textFieldValues[param.name]}
-                    onChange={(event) => { 
+                    onChange={(event: { target: { value: any } }) => { 
                       dispatch(setTextFieldValue({ value: event.target.value, field: param.name }))
                     }}
                   />
@@ -184,16 +183,16 @@ function App() {
         </TabPanel>
       </TabContext>
       </Box>
-      <div>
+      <Grid>
         <a href='https://vitejs.dev' target='_blank'>
           <img src='/vite.svg' className='logo' alt='Vite logo' />
         </a>
         <a href='https://reactjs.org' target='_blank'>
           <img src={reactLogo} className='logo react' alt='React logo' />
         </a>
-      </div>
+      </Grid>
       <h1>Vite + React</h1>
-      <div className='card'>
+      <Grid className='card'>
         <Tooltip arrow={true} title='Button for increment app'>
           <Button 
             style={{
@@ -208,11 +207,11 @@ function App() {
         <p>
           Edit <code>src/App.tsx</code> and save to test HMR
         </p>
-      </div>
+      </Grid>
       <p className='read-the-docs'>
         Click on the Vite and React logos to learn more
       </p>
-    </div>
+    </Grid>
   )
 }
 

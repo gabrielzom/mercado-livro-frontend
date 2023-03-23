@@ -3,7 +3,7 @@ import {
   apiMercadoLivroDocs, 
   emptyTextFieldValues,
   ITextFields,
-  IMercadoLivroDocs
+  IMercadoLivroDocs,
 } from '../../../utils/options'
 
 // @ts-ignore: Unreachable code error
@@ -17,7 +17,7 @@ const app = createSlice({
   name: 'app',
   initialState: {
     count: Number(window.localStorage.getItem('count')) || 0,
-    isLoadindRequest: false,
+    isLoadingRequest: false,
     openModalToShowResponse: false,
     textFieldValues: textFieldValueStorage || emptyTextFieldValues,
     apiMercadoLivroDocsToShow: apiMercadoLivroDocsStorage || apiMercadoLivroDocs[0],
@@ -25,7 +25,7 @@ const app = createSlice({
   },
   reducers: {
     setIsLoadingRequest: (state, { payload: isLoading }) => {
-      state.isLoadindRequest = isLoading;
+      state.isLoadingRequest = isLoading;
     },
 
     setOpenModalToShowResponse: (state, { payload: showModal }) => {

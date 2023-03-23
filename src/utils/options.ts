@@ -6,8 +6,6 @@ export interface IParam {
   obs: string | null,
 }
 
-
-
 export interface IMercadoLivroDocs {
   title: string,
   method: string,
@@ -27,7 +25,16 @@ export interface IRequest {
 export interface ITextFields {
   id: string,
   fullName: string,
-  email: string
+  email: string,
+}
+
+export interface IAppState {
+  count: number,
+  isLoadingRequest: boolean,
+  openModalToShowResponse: boolean,
+  textFieldValues: ITextFields,
+  apiMercadoLivroDocsToShow: IMercadoLivroDocs,
+  result: any | null
 }
 
 export const emptyTextFieldValues: ITextFields = { 
